@@ -1,4 +1,4 @@
 # ignore build files
-build/
+builds/
 # ignore macOS system files
 .DS_Store
