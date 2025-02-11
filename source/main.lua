@@ -4,6 +4,11 @@ import "CoreLibs/sprites"
 -- localize playdate graphics for small performance gain + ease of use
 local pd = playdate
 local gfx = pd.graphics
+-- localize playdate sound for small performance gain + ease of use
+local gfs = pd.sound
+local scoresfx = gfs.sampleplayer.new("sound/zap1")
+local losssfx = gfs.sampleplayer.new("sound/zapThreeToneDown")
+local startsfx = gfs.sampleplayer.new("sound/zapThreeToneUp")
 
 -- Player
 -- -- X is right / Y is down | Screen is 400x240
@@ -39,6 +44,7 @@ function pd.update()
         gfx.drawTextAligned("Press A to start", 200, 40, kTextAlignment.center)
         if pd.buttonJustPressed(pd.kButtonA) then
             gameState = "active"
+            startsfx:play()
             score = 0
             obstacleSpeed = 5
             playerSprite:moveTo(playerStartX, playerStartY)
@@ -56,12 +62,14 @@ function pd.update()
         if obstacleSprite.x < -20 then
             obstacleSprite:moveTo(450, math.random(40, 200))
             score += 1
+            scoresfx:play()
             obstacleSpeed += 0.2
             print("obstacleSpeed: " .. obstacleSpeed)
         end
 
         if length > 0 or playerSprite.y > 270 or playerSprite.y < -30 then
             gameState = "stopped"
+            losssfx:play()
         end
     end
 
